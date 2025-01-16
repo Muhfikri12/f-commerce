@@ -14,6 +14,7 @@ type Config struct {
 	Key       Key
 	Database  Database
 	Redis     Redis
+	SmtpEmail SmtpEmail
 }
 
 type Database struct {
@@ -39,6 +40,14 @@ type Redis struct {
 type Key struct {
 	PublicKey  string
 	PrivateKey string
+}
+
+type SmtpEmail struct {
+	SmtpHost  string
+	SmtpPort  string
+	SmtpUser  string
+	FromEmail string
+	ApiKey    string
 }
 
 func SetConfig() (*Config, error) {
@@ -91,6 +100,14 @@ func SetConfig() (*Config, error) {
 		Key: Key{
 			PublicKey:  viper.GetString("PUBLIC_KEY"),
 			PrivateKey: viper.GetString("PRIVATE_KEY"),
+		},
+
+		SmtpEmail: SmtpEmail{
+			SmtpHost:  viper.GetString("SMTP_HOST"),
+			SmtpPort:  viper.GetString("SMTP_PORT"),
+			SmtpUser:  viper.GetString("SMTP_USER"),
+			FromEmail: viper.GetString("FROM_EMAIL"),
+			ApiKey:    viper.GetString("SMTP_API_KEY"),
 		},
 	}
 

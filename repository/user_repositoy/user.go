@@ -8,7 +8,7 @@ import (
 )
 
 type UserRepo interface {
-	CreateCustomer(customer *model.Customer) error
+	CreateCustomer(user *model.User) error
 }
 
 type userRepo struct {
@@ -20,27 +20,10 @@ func NewUserRepo(db *gorm.DB, log *zap.Logger) UserRepo {
 	return &userRepo{db, log}
 }
 
-func (c *userRepo) CreateCustomer(customer *model.Customer) error {
-	err := c.db.Transaction(func(tx *gorm.DB) error {
+func (c *userRepo) CreateCustomer(user *model.User) error {
 
-		if err := tx.Create(&customer.User).Error; err != nil {
-			c.log.Error("failed to add user to database", zap.Error(err))
-			return err
-		}
-
-		customer.ID = customer.User.Id
-
-		if err := tx.Create(&customer).Error; err != nil {
-			c.log.Error("failed to add employee to database", zap.Error(err))
-			return err
-		}
-
-		return nil
-
-	})
-
-	if err != nil {
-		c.log.Error("transaction failed", zap.Error(err))
+	if err := c.db.Create(&user).Error; err != nil {
+		c.log.Error("failed to add user to database", zap.Error(err))
 		return err
 	}
 

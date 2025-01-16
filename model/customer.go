@@ -3,6 +3,8 @@ package model
 import (
 	"errors"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Customer struct {
@@ -15,7 +17,9 @@ type Customer struct {
 	Gender      string
 	Image       string
 	Status      string
-	Updated_at  time.Time
+	Created_at  time.Time       `json:"created_at"`
+	Updated_at  time.Time       `json:"updated_at"`
+	Deleted_at  *gorm.DeletedAt `json:"-" gorm:"index"`
 }
 
 func (e *Customer) ValidateEmploye() error {
@@ -24,7 +28,7 @@ func (e *Customer) ValidateEmploye() error {
 		return errors.New("error payload should be L or P")
 	}
 
-	if e.Status != "active" && e.Status != "inactive" {
+	if e.Status != "active" && e.Status != "inactive" && e.Status != "blocked" {
 		return errors.New("error payload should be active or inactive")
 	}
 
