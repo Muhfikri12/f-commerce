@@ -30,6 +30,8 @@ func (us *userService) RegisterUser(user *model.User) error {
 
 	user.Password = string(password)
 
+	user.Status = "unverified"
+
 	if err := us.Repo.User.RegisterUser(user); err != nil {
 		return err
 	}

@@ -61,6 +61,11 @@ func (uc *userController) RegisterUser(c *gin.Context) {
 		return
 	}
 
+	if err := uc.rdb.SetRedis(user.Email, otp, 5*60); err != nil {
+		uc.log.Error("failed set otp on redis : ", zap.Error(err))
+		helper.Responses(c, http.StatusBadRequest, "failed set otp on redis : "+err.Error(), nil)
+	}
+
 	uc.log.Info("Registration successfully")
 
 	helper.Responses(c, http.StatusCreated, "Registration successfully, Please check email for verification otp", nil)

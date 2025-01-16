@@ -13,6 +13,8 @@ import (
 
 type AuthService interface {
 	Login(login *model.Login) (*model.User, string, error)
+	VerificationEmail(verify *model.VerificationEmail) error
+	AskNewOTP(email string) error
 }
 
 type authService struct {
@@ -33,6 +35,10 @@ func (as *authService) Login(login *model.Login) (*model.User, string, error) {
 		return nil, "", err
 	}
 
+	if user.Status == "unverified" {
+		return nil, "", fmt.Errorf("account is unverified")
+	}
+
 	if !helper.CheckHashPassword(login.Password, user.Password) {
 		as.log.Error("invalid password")
 		return nil, "", errors.New("invalid password")
@@ -50,6 +56,24 @@ func (as *authService) Login(login *model.Login) (*model.User, string, error) {
 }
 
 func (as *authService) VerificationEmail(verify *model.VerificationEmail) error {
+
+	if err := as.repo.Auth.VerificationEmail(verify); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (as *authService) AskNewOTP(email string) error {
+
+	user := model.Login{
+		Input:    email,
+		Password: "k",
+	}
+
+	if _, err := as.repo.Auth.Login(&user); err != nil {
+		return err
+	}
 
 	return nil
 }

@@ -46,7 +46,7 @@ func NewIntegrateContext() (*IntegrationContext, error) {
 
 	rdb := database.NewCache(config, 0)
 
-	repo := repository.NewAllRepo(db, log, rdb)
+	repo := repository.NewAllRepo(db, log)
 
 	service := service.NewAllService(repo, log, jwt)
 

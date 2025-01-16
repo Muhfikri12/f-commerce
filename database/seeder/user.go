@@ -20,6 +20,7 @@ func User(db *gorm.DB) error {
 		Password:  string(password),
 		Role:      "super_admin",
 		Username:  "superadmin",
+		Status:    "active",
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}

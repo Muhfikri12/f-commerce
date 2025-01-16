@@ -16,7 +16,6 @@ type Customer struct {
 	AddressID   int
 	Gender      string
 	Image       string
-	Status      string
 	Created_at  time.Time       `json:"created_at"`
 	Updated_at  time.Time       `json:"updated_at"`
 	Deleted_at  *gorm.DeletedAt `json:"-" gorm:"index"`
@@ -26,10 +25,6 @@ func (e *Customer) ValidateEmploye() error {
 
 	if e.Gender != "L" && e.Gender != "P" {
 		return errors.New("error payload should be L or P")
-	}
-
-	if e.Status != "active" && e.Status != "inactive" && e.Status != "blocked" {
-		return errors.New("error payload should be active or inactive")
 	}
 
 	return nil
