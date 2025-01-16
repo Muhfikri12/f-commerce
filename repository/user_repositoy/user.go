@@ -8,7 +8,7 @@ import (
 )
 
 type UserRepo interface {
-	CreateCustomer(user *model.User) error
+	RegisterUser(user *model.User) error
 }
 
 type userRepo struct {
@@ -20,7 +20,7 @@ func NewUserRepo(db *gorm.DB, log *zap.Logger) UserRepo {
 	return &userRepo{db, log}
 }
 
-func (c *userRepo) CreateCustomer(user *model.User) error {
+func (c *userRepo) RegisterUser(user *model.User) error {
 
 	if err := c.db.Create(&user).Error; err != nil {
 		c.log.Error("failed to add user to database", zap.Error(err))

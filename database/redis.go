@@ -41,3 +41,7 @@ func (c *Cache) SetRedis(name, value string, exp int) error {
 func (c *Cache) Delete(name string) error {
 	return c.rdb.Del(context.Background(), c.prefix+"_"+name).Err()
 }
+
+func (c *Cache) Get(name string) (string, error) {
+	return c.rdb.Get(context.Background(), c.prefix+"_"+name).Result()
+}

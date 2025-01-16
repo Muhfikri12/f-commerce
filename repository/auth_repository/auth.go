@@ -2,7 +2,9 @@ package authrepository
 
 import (
 	"errors"
+	"f-commerce/database"
 	"f-commerce/model"
+	"fmt"
 
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -12,12 +14,13 @@ type AuthRepo interface {
 	Login(login *model.Login) (*model.User, error)
 }
 type authRepo struct {
-	db  *gorm.DB
-	log *zap.Logger
+	db    *gorm.DB
+	log   *zap.Logger
+	redis *database.Cache
 }
 
-func NewAuthRepo(db *gorm.DB, log *zap.Logger) AuthRepo {
-	return &authRepo{db, log}
+func NewAuthRepo(db *gorm.DB, log *zap.Logger, redis *database.Cache) AuthRepo {
+	return &authRepo{db, log, redis}
 }
 
 func (ar *authRepo) Login(login *model.Login) (*model.User, error) {
@@ -31,4 +34,22 @@ func (ar *authRepo) Login(login *model.Login) (*model.User, error) {
 	}
 
 	return &user, nil
+}
+
+func (ar *authRepo) VerificationEmail(verify *model.VerificationEmail) error {
+
+	otp, err := ar.redis.Get(verify.Email)
+	if err != nil {
+		return err
+	}
+
+	if otp != verify.Otp {
+		return errors.New("otp invalid or expired")
+	}
+
+	if err := ar.redis.Delete(verify.Email); err != nil {
+		return fmt.Errorf("failed to delete otp: %v ", err)
+	}
+
+	return nil
 }

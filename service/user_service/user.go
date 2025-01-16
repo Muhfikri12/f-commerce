@@ -5,6 +5,7 @@ import (
 	"f-commerce/repository"
 
 	"go.uber.org/zap"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService interface {
@@ -22,7 +23,14 @@ func NewUserService(Repo *repository.Repository, Log *zap.Logger) UserService {
 
 func (us *userService) RegisterUser(user *model.User) error {
 
-	if err := us.Repo.User.CreateCustomer(user); err != nil {
+	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
+	user.Password = string(password)
+
+	if err := us.Repo.User.RegisterUser(user); err != nil {
 		return err
 	}
 

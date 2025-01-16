@@ -16,12 +16,12 @@ func User(db *gorm.DB) error {
 	}
 
 	superAdmin := model.User{
-		Email:      "superadmin@example.com",
-		Password:   string(password),
-		Role:       "super_admin",
-		Username:   "superadmin",
-		Created_at: time.Now(),
-		Updated_at: time.Now(),
+		Email:     "superadmin@example.com",
+		Password:  string(password),
+		Role:      "super_admin",
+		Username:  "superadmin",
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	}
 
 	if err := db.Create(&superAdmin).Error; err != nil {
