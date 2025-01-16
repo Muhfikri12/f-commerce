@@ -1,8 +1,8 @@
 package main
 
 import (
-	"finance/infra"
-	"finance/route"
+	"f-commerce/infra"
+	"f-commerce/route"
 	"fmt"
 	"log"
 	"net/http"

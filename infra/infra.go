@@ -1,12 +1,12 @@
 package infra
 
 import (
-	"finance/config"
-	"finance/controller"
-	"finance/database"
-	"finance/helper"
-	"finance/repository"
-	"finance/service"
+	"f-commerce/config"
+	"f-commerce/controller"
+	"f-commerce/database"
+	"f-commerce/helper"
+	"f-commerce/repository"
+	"f-commerce/service"
 
 	"go.uber.org/zap"
 	"gorm.io/gorm"

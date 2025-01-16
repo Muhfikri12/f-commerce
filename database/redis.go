@@ -2,7 +2,7 @@ package database
 
 import (
 	"context"
-	"finance/config"
+	"f-commerce/config"
 	"time"
 
 	"github.com/go-redis/redis/v8"

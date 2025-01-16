@@ -1,7 +1,7 @@
 package database
 
 import (
-	"finance/model"
+	"f-commerce/model"
 	"fmt"
 
 	"gorm.io/gorm"

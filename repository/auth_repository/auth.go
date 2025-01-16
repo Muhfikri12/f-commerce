@@ -2,7 +2,7 @@ package authrepository
 
 import (
 	"errors"
-	"finance/model"
+	"f-commerce/model"
 
 	"go.uber.org/zap"
 	"gorm.io/gorm"

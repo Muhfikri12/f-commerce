@@ -1,7 +1,7 @@
 package route
 
 import (
-	"finance/infra"
+	"f-commerce/infra"
 
 	"github.com/gin-gonic/gin"
 )

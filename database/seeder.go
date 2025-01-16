@@ -1,7 +1,7 @@
 package database
 
 import (
-	"finance/database/seeder"
+	"f-commerce/database/seeder"
 	"fmt"
 
 	"go.uber.org/zap"

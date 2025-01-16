@@ -1,9 +1,9 @@
 package service
 
 import (
-	"finance/helper"
-	"finance/repository"
-	authservice "finance/service/auth_service"
+	"f-commerce/helper"
+	"f-commerce/repository"
+	authservice "f-commerce/service/auth_service"
 
 	"go.uber.org/zap"
 )

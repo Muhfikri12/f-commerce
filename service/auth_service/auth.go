@@ -2,9 +2,9 @@ package authservice
 
 import (
 	"errors"
-	"finance/helper"
-	"finance/model"
-	"finance/repository"
+	"f-commerce/helper"
+	"f-commerce/model"
+	"f-commerce/repository"
 	"fmt"
 	"strconv"
 

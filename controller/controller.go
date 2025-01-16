@@ -1,9 +1,9 @@
 package controller
 
 import (
-	authcontroller "finance/controller/auth_controller"
-	"finance/database"
-	"finance/service"
+	authcontroller "f-commerce/controller/auth_controller"
+	"f-commerce/database"
+	"f-commerce/service"
 
 	"go.uber.org/zap"
 )

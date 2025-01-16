@@ -1,7 +1,7 @@
 package seeder
 
 import (
-	"finance/model"
+	"f-commerce/model"
 	"log"
 	"time"
 

@@ -1,7 +1,7 @@
 package helper
 
 import (
-	"finance/config"
+	"f-commerce/config"
 	"log"
 	"os"
 

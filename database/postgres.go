@@ -1,7 +1,7 @@
 package database
 
 import (
-	"finance/config"
+	"f-commerce/config"
 	"fmt"
 	"log"
 	"os"

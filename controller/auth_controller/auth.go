@@ -1,10 +1,10 @@
 package authcontroller
 
 import (
-	"finance/database"
-	"finance/helper"
-	"finance/model"
-	"finance/service"
+	"f-commerce/database"
+	"f-commerce/helper"
+	"f-commerce/model"
+	"f-commerce/service"
 	"net/http"
 	"strconv"
 
