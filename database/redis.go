@@ -33,3 +33,7 @@ func NewCache(cfg *config.Config, expired int) *Cache {
 func (c *Cache) SaveToken(name string, value string) error {
 	return c.rdb.Set(context.Background(), c.prefix+"_"+name, value, 24*time.Hour).Err()
 }
+
+func (c *Cache) Delete(name string) error {
+	return c.rdb.Del(context.Background(), c.prefix+"_"+name).Err()
+}
