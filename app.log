@@ -1,0 +1,6 @@
+{"L":"INFO","T":"2025-01-16T07:55:19.948+0700","M":"Logger initialized successfully"}
+{"L":"ERROR","T":"2025-01-16T07:55:26.009+0700","M":"login successfully"}
+{"L":"ERROR","T":"2025-01-16T07:59:31.794+0700","M":"login successfully"}
+{"L":"ERROR","T":"2025-01-16T07:59:46.821+0700","M":"Login error","error":"record not found"}
+{"L":"ERROR","T":"2025-01-16T07:59:46.821+0700","M":"failed to fatch repository: ","error":"invalid email or username"}
+{"L":"ERROR","T":"2025-01-16T07:59:46.821+0700","M":"invalid email or username"}
