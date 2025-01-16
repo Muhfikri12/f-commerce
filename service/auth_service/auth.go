@@ -12,7 +12,7 @@ import (
 )
 
 type AuthService interface {
-	Login(login *model.Login) (string, error)
+	Login(login *model.Login) (string, *int, error)
 }
 
 type authService struct {
@@ -25,17 +25,17 @@ func NewAuthService(repo *repository.Repository, log *zap.Logger, jwt *helper.Jw
 	return &authService{repo, log, jwt}
 }
 
-func (as *authService) Login(login *model.Login) (string, error) {
+func (as *authService) Login(login *model.Login) (string, *int, error) {
 
 	user, err := as.repo.Auth.Login(login)
 	if err != nil {
 		as.log.Error("failed to fatch repository: ", zap.Error(err))
-		return "", err
+		return "", nil, err
 	}
 
 	if !helper.CheckHashPassword(login.Password, user.Password) {
 		as.log.Error("invalid password")
-		return "", errors.New("invalid password")
+		return "", nil, errors.New("invalid password")
 	}
 
 	id := strconv.Itoa(user.Id)
@@ -43,8 +43,13 @@ func (as *authService) Login(login *model.Login) (string, error) {
 	token, err := as.jwt.CreateToken(user.Email, id, user.Role)
 	if err != nil {
 		as.log.Error("failed create token: ", zap.Error(err))
-		return "", fmt.Errorf("failed create token: " + err.Error())
+		return "", nil, fmt.Errorf("failed create token: " + err.Error())
 	}
 
-	return token, nil
+	return token, &user.Id, nil
+}
+
+func (as *authService) Logout(token string) error {
+
+	return nil
 }

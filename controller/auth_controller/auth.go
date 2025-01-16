@@ -6,6 +6,7 @@ import (
 	"finance/model"
 	"finance/service"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -35,14 +36,16 @@ func (ac *authController) Login(c *gin.Context) {
 		return
 	}
 
-	token, err := ac.service.Auth.Login(&login)
+	token, id, err := ac.service.Auth.Login(&login)
 	if err != nil {
 		ac.log.Error(err.Error())
 		helper.Responses(c, http.StatusBadRequest, err.Error(), nil)
 		return
 	}
 
-	if err := ac.redis.SaveToken("sessions", token); err != nil {
+	idStr := strconv.Itoa(*id)
+
+	if err := ac.redis.SaveToken(idStr, token); err != nil {
 		ac.log.Error("failed save token to redis, ", zap.Error(err))
 		helper.Responses(c, http.StatusBadRequest, "failed save token to redis, "+err.Error(), nil)
 		return
