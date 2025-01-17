@@ -1,7 +1,6 @@
 package model
 
 import (
-	"errors"
 	"time"
 
 	"gorm.io/gorm"
@@ -12,21 +11,22 @@ type Customer struct {
 	UserID      int       `json:"user_id"`
 	Fullname    string    `json:"fullname" binding:"required,min=5"`
 	DateOfBirth time.Time `json:"date_of_birth" binding:"required"`
-	AddressID   int
 	Gender      string
+	Phone       string
 	Image       string
 	CreatedAt   time.Time       `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt   time.Time       `json:"updated_at" gorm:"autoUpdateTime"`
 	DeletedAt   *gorm.DeletedAt `json:"-" gorm:"index"`
 }
 
-func (e *Customer) ValidateGender() error {
-
-	if e.Gender != "L" && e.Gender != "P" {
-		return errors.New("error payload should be L or P")
-	}
-
-	return nil
+type Admin struct {
+	ID        int             `json:"-" gorm:"primaryKey"`
+	UserID    int             `json:"user_id"`
+	Fullname  string          `json:"fullname" binding:"required,min=5"`
+	Phone     string          `json:"phone" binding:"required"`
+	CreatedAt time.Time       `json:"created_at" gorm:"autoCreateTime"`
+	UpdatedAt time.Time       `json:"updated_at" gorm:"autoUpdateTime"`
+	DeletedAt *gorm.DeletedAt `json:"-" gorm:"index"`
 }
 
 type Register struct {

@@ -3,18 +3,9 @@ package userservice
 import (
 	"f-commerce/model"
 	"fmt"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
-func (us *userService) UpdateCustomer(token string, cust *model.CustomerData) error {
-
-	password, err := bcrypt.GenerateFromPassword([]byte(cust.User.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-
-	cust.User.Password = string(password)
+func (us *userService) UpdateCustomer(token string, cust *model.Customer) error {
 
 	id, err := us.jwt.ParsingPayload(token)
 	if err != nil {

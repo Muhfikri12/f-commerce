@@ -10,19 +10,13 @@ import (
 
 func (uc *userController) UpdateCustomer(c *gin.Context) {
 
-	cust := model.CustomerData{}
+	cust := model.Customer{}
 
 	token := c.GetHeader("Authorization")
 
 	if err := c.ShouldBindJSON(&cust); err != nil {
 		uc.log.Error("Invalid payload request: " + err.Error())
 		helper.Responses(c, http.StatusBadRequest, "Invalid payload request: "+err.Error(), nil)
-		return
-	}
-
-	if valid, msg := helper.ValidatePassword(cust.User.Password); !valid {
-		uc.log.Error("Validation error: " + msg.Error())
-		helper.Responses(c, http.StatusBadRequest, msg.Error(), nil)
 		return
 	}
 

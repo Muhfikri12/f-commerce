@@ -11,9 +11,10 @@ import (
 
 type UserService interface {
 	RegisterUser(regist *model.Register) error
-	UpdateCustomer(token string, cust *model.CustomerData) error
+	UpdateCustomer(token string, cust *model.Customer) error
 	UpdateProfile(token string, image string) error
 	UpdateRole(token string) error
+	UpdateAdmin(token string, admin *model.Admin) error
 }
 
 type userService struct {

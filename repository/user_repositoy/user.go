@@ -11,9 +11,10 @@ import (
 type UserRepo interface {
 	RegisterUser(cust *model.CustomerData) error
 	GetUser(login *model.Login) (*model.User, error)
-	UpdateCustomer(id int, customer *model.CustomerData) error
+	UpdateCustomer(id int, customer *model.Customer) error
 	UpdateProfile(id int, image string) error
 	UpdateRole(id int) error
+	UpdateAdmin(id int, admin *model.Admin) error
 }
 
 type userRepo struct {
@@ -43,14 +44,14 @@ func (c *userRepo) RegisterUser(cust *model.CustomerData) error {
 	err := c.db.Transaction(func(tx *gorm.DB) error {
 
 		if err := tx.Create(&cust.User).Error; err != nil {
-			c.log.Error("failed to add user to database", zap.Error(err))
+			c.log.Error("failed add user to database", zap.Error(err))
 			return err
 		}
 
 		cust.Customer.UserID = cust.User.Id
 
 		if err := tx.Create(&cust.Customer).Error; err != nil {
-			c.log.Error("failed to add to database customer", zap.Error(err))
+			c.log.Error("failed add to database customer", zap.Error(err))
 			return err
 		}
 

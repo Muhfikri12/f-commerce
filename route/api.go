@@ -17,6 +17,7 @@ func NewRoutes(ctx *infra.IntegrationContext) *gin.Engine {
 
 	user := r.Group("/users")
 	{
+		user.PUT("/admin", ctx.Ctl.User.UpdateAdmin)
 		user.PUT("/profile", ctx.Ctl.User.UpdateProfile)
 		user.PUT("/role", ctx.Ctl.User.UpdateRole)
 		user.PUT("/update", ctx.Ctl.User.UpdateCustomer)

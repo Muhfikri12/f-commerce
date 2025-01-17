@@ -18,6 +18,7 @@ type UserController interface {
 	UpdateCustomer(c *gin.Context)
 	UpdateRole(c *gin.Context)
 	UpdateProfile(c *gin.Context)
+	UpdateAdmin(c *gin.Context)
 }
 
 type userController struct {
