@@ -34,14 +34,18 @@ func (us *userService) RegisterUser(regist *model.Register) error {
 		return err
 	}
 
-	regist.Password = string(password)
+	status := "unverified"
+
+	if regist.Role == "admin" {
+		status = "active"
+	}
 
 	user := model.CustomerData{
 		User: model.User{
-			Password: regist.Password,
+			Password: string(password),
 			Email:    regist.Email,
-			Role:     "customer",
-			Status:   "unverified",
+			Role:     regist.Role,
+			Status:   status,
 			Username: regist.Fullname + helper.GenerateOTP(),
 		},
 		Customer: model.Customer{

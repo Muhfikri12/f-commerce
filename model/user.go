@@ -33,6 +33,7 @@ type Register struct {
 	Fullname string `binding:"required"`
 	Email    string `binding:"required"`
 	Password string `binding:"required,min=8"`
+	Role     string `binding:"required"`
 }
 
 type CustomerData struct {
