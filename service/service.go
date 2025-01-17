@@ -17,6 +17,6 @@ type AllService struct {
 func NewAllService(repo *repository.Repository, log *zap.Logger, jwt *helper.Jwt) *AllService {
 	return &AllService{
 		Auth: authservice.NewAuthService(repo, log, jwt),
-		User: userservice.NewUserService(repo, log),
+		User: userservice.NewUserService(repo, log, jwt),
 	}
 }

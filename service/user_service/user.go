@@ -11,16 +11,18 @@ import (
 
 type UserService interface {
 	RegisterUser(regist *model.Register) error
-	UpdateCustomer(id int, cust *model.CustomerData) error
+	UpdateCustomer(token string, cust *model.CustomerData) error
+	UpdateProfile(token string, image string) error
 }
 
 type userService struct {
 	Repo *repository.Repository
 	Log  *zap.Logger
+	jwt  *helper.Jwt
 }
 
-func NewUserService(Repo *repository.Repository, Log *zap.Logger) UserService {
-	return &userService{Repo, Log}
+func NewUserService(Repo *repository.Repository, Log *zap.Logger, jwt *helper.Jwt) UserService {
+	return &userService{Repo, Log, jwt}
 }
 
 func (us *userService) RegisterUser(regist *model.Register) error {

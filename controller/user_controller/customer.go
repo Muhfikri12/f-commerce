@@ -3,12 +3,9 @@ package usercontroller
 import (
 	"f-commerce/helper"
 	"f-commerce/model"
-	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 func (uc *userController) UpdateCustomer(c *gin.Context) {
@@ -16,18 +13,6 @@ func (uc *userController) UpdateCustomer(c *gin.Context) {
 	cust := model.CustomerData{}
 
 	token := c.GetHeader("Authorization")
-	fmt.Println(token)
-
-	jwt := helper.NewJwt(uc.cfg, uc.log)
-
-	idStr, err := jwt.ParsingPayload(token)
-	if err != nil {
-		uc.log.Error("Failed parsing payload JWT: " + err.Error())
-		helper.Responses(c, http.StatusBadRequest, "Failed parsing payload JWT: "+err.Error(), nil)
-		return
-	}
-
-	id, _ := strconv.Atoi(idStr.(string))
 
 	if err := c.ShouldBindJSON(&cust); err != nil {
 		uc.log.Error("Invalid payload request: " + err.Error())
@@ -41,9 +26,29 @@ func (uc *userController) UpdateCustomer(c *gin.Context) {
 		return
 	}
 
-	if err := uc.service.User.UpdateCustomer(id, &cust); err != nil {
-		uc.log.Error("Failed to update customer: "+err.Error(), zap.Int("id", id))
+	if err := uc.service.User.UpdateCustomer(token, &cust); err != nil {
+		uc.log.Error("Failed to update customer: " + err.Error())
 		helper.Responses(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+
+}
+
+func (uc *userController) UpdateProfile(c *gin.Context) {
+
+	token := c.GetHeader("Authorization")
+
+	filePath, err := helper.UploadImage(c, "image")
+	if err != nil {
+		uc.log.Error("Failed to upload image: " + err.Error())
+		helper.Responses(c, http.StatusBadRequest, "Failed to upload image: "+err.Error(), nil)
+		return
+	}
+
+	err = uc.service.User.UpdateProfile(token, filePath)
+	if err != nil {
+		uc.log.Error("Failed parsing payload JWT: " + err.Error())
+		helper.Responses(c, http.StatusBadRequest, "Failed parsing payload JWT: "+err.Error(), nil)
 		return
 	}
 

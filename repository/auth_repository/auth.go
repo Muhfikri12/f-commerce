@@ -2,6 +2,7 @@ package authrepository
 
 import (
 	"f-commerce/model"
+	"fmt"
 
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -21,10 +22,16 @@ func NewAuthRepo(db *gorm.DB, log *zap.Logger) AuthRepo {
 
 func (ar *authRepo) VerificationEmail(verify *model.VerificationEmail) error {
 
-	if err := ar.db.Table("users").
+	result := ar.db.Table("users").
 		Where("email = ?", verify.Email).
-		Update("status", "active").Error; err != nil {
-		return err
+		Update("status", "active")
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("email %s doesn't exist", verify.Email)
 	}
 
 	return nil
