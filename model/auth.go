@@ -1,7 +1,6 @@
 package model
 
 import (
-	"errors"
 	"time"
 
 	"gorm.io/gorm"
@@ -27,12 +26,4 @@ type User struct {
 	CreatedAt time.Time       `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time       `json:"updated_at" gorm:"autoUpdateTime"`
 	DeletedAt *gorm.DeletedAt `json:"-" gorm:"index"`
-}
-
-func (u *User) Validate() error {
-	if u.Role != "admin" && u.Role != "customer" {
-		return errors.New("role must be either 'admin' or 'customer'")
-	}
-
-	return nil
 }

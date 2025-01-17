@@ -27,7 +27,7 @@ func NewUserController(service *service.AllService, log *zap.Logger, rdb *databa
 }
 
 func (uc *userController) RegisterUser(c *gin.Context) {
-	user := model.User{}
+	user := model.Register{}
 
 	otp := helper.GenerateOTP()
 
@@ -37,9 +37,9 @@ func (uc *userController) RegisterUser(c *gin.Context) {
 		return
 	}
 
-	if err := user.Validate(); err != nil {
-		uc.log.Error("Validation error: " + err.Error())
-		helper.Responses(c, http.StatusBadRequest, "Validation error: "+err.Error(), nil)
+	if valid, msg := user.ValidatePassword(); !valid {
+		uc.log.Error("Validation error: " + msg.Error())
+		helper.Responses(c, http.StatusBadRequest, msg.Error(), nil)
 		return
 	}
 

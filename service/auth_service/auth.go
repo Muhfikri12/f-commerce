@@ -29,7 +29,7 @@ func NewAuthService(repo *repository.Repository, log *zap.Logger, jwt *helper.Jw
 
 func (as *authService) Login(login *model.Login) (*model.User, string, error) {
 
-	user, err := as.repo.Auth.Login(login)
+	user, err := as.repo.User.GetUser(login)
 	if err != nil {
 		as.log.Error("failed to fatch repository: ", zap.Error(err))
 		return nil, "", err
@@ -71,7 +71,7 @@ func (as *authService) AskNewOTP(email string) error {
 		Password: "k",
 	}
 
-	if _, err := as.repo.Auth.Login(&user); err != nil {
+	if _, err := as.repo.User.GetUser(&user); err != nil {
 		return err
 	}
 
