@@ -15,6 +15,8 @@ func NewRoutes(ctx *infra.IntegrationContext) *gin.Engine {
 	r.POST("/register", ctx.Ctl.User.RegisterUser)
 	r.GET("/new-otp", ctx.Ctl.Auth.AskNewOTP)
 
+	r.PUT("/user/update", ctx.Ctl.User.UpdateCustomer)
+
 	return r
 
 }

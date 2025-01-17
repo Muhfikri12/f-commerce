@@ -52,7 +52,7 @@ func NewIntegrateContext() (*IntegrationContext, error) {
 
 	// middleware := middleware.NewMiddleware(service, log)
 
-	handler := controller.NewAllController(service, log, rdb)
+	handler := controller.NewAllController(service, log, rdb, config)
 
 	return &IntegrationContext{
 		Cfg:   config,

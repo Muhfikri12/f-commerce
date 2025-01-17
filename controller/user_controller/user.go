@@ -1,6 +1,7 @@
 package usercontroller
 
 import (
+	"f-commerce/config"
 	"f-commerce/database"
 	"f-commerce/helper"
 	"f-commerce/model"
@@ -14,16 +15,18 @@ import (
 
 type UserController interface {
 	RegisterUser(c *gin.Context)
+	UpdateCustomer(c *gin.Context)
 }
 
 type userController struct {
 	service *service.AllService
 	log     *zap.Logger
 	rdb     *database.Cache
+	cfg     *config.Config
 }
 
-func NewUserController(service *service.AllService, log *zap.Logger, rdb *database.Cache) UserController {
-	return &userController{service, log, rdb}
+func NewUserController(service *service.AllService, log *zap.Logger, rdb *database.Cache, cfg *config.Config) UserController {
+	return &userController{service: service, log: log, rdb: rdb, cfg: cfg}
 }
 
 func (uc *userController) RegisterUser(c *gin.Context) {
@@ -37,7 +40,7 @@ func (uc *userController) RegisterUser(c *gin.Context) {
 		return
 	}
 
-	if valid, msg := user.ValidatePassword(); !valid {
+	if valid, msg := helper.ValidatePassword(user.Password); !valid {
 		uc.log.Error("Validation error: " + msg.Error())
 		helper.Responses(c, http.StatusBadRequest, msg.Error(), nil)
 		return
@@ -64,6 +67,7 @@ func (uc *userController) RegisterUser(c *gin.Context) {
 	if err := uc.rdb.SetRedis(user.Email, otp, 5*60); err != nil {
 		uc.log.Error("failed set otp on redis : ", zap.Error(err))
 		helper.Responses(c, http.StatusBadRequest, "failed set otp on redis : "+err.Error(), nil)
+		return
 	}
 
 	uc.log.Info("Registration successfully")

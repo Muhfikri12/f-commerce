@@ -4,7 +4,6 @@ import (
 	"f-commerce/helper"
 	"f-commerce/model"
 	"f-commerce/repository"
-	userrepositoy "f-commerce/repository/user_repositoy"
 
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
@@ -12,7 +11,7 @@ import (
 
 type UserService interface {
 	RegisterUser(regist *model.Register) error
-	CreateCustomer(cust *model.Customer) error
+	UpdateCustomer(id int, cust *model.CustomerData) error
 }
 
 type userService struct {
@@ -33,7 +32,7 @@ func (us *userService) RegisterUser(regist *model.Register) error {
 
 	regist.Password = string(password)
 
-	user := userrepositoy.Regist{
+	user := model.CustomerData{
 		User: model.User{
 			Password: regist.Password,
 			Email:    regist.Email,
@@ -46,7 +45,7 @@ func (us *userService) RegisterUser(regist *model.Register) error {
 		},
 	}
 
-	if err := us.Repo.User.RegisterUser(user); err != nil {
+	if err := us.Repo.User.RegisterUser(&user); err != nil {
 		return err
 	}
 

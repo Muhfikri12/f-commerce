@@ -9,10 +9,9 @@ import (
 )
 
 type UserRepo interface {
-	RegisterUser(cust Regist) error
+	RegisterUser(cust *model.CustomerData) error
 	GetUser(login *model.Login) (*model.User, error)
-	UpdateCustomer(customer *model.Customer) error
-	CreateCustomer(cust *model.Customer) error
+	UpdateCustomer(id int, customer *model.CustomerData) error
 }
 
 type userRepo struct {
@@ -37,23 +36,18 @@ func (c *userRepo) GetUser(login *model.Login) (*model.User, error) {
 	return &user, nil
 }
 
-type Regist struct {
-	User     model.User
-	Customer model.Customer
-}
-
-func (c *userRepo) RegisterUser(cust Regist) error {
+func (c *userRepo) RegisterUser(cust *model.CustomerData) error {
 
 	err := c.db.Transaction(func(tx *gorm.DB) error {
 
-		if err := c.db.Create(&cust.User).Error; err != nil {
+		if err := tx.Create(&cust.User).Error; err != nil {
 			c.log.Error("failed to add user to database", zap.Error(err))
 			return err
 		}
 
 		cust.Customer.UserID = cust.User.Id
 
-		if err := c.db.Create(&cust.Customer).Error; err != nil {
+		if err := tx.Create(&cust.Customer).Error; err != nil {
 			c.log.Error("failed to add to database customer", zap.Error(err))
 			return err
 		}

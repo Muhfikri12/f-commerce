@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"f-commerce/config"
 	authcontroller "f-commerce/controller/auth_controller"
 	usercontroller "f-commerce/controller/user_controller"
 	"f-commerce/database"
@@ -14,9 +15,9 @@ type AllController struct {
 	User usercontroller.UserController
 }
 
-func NewAllController(service *service.AllService, log *zap.Logger, redis *database.Cache) *AllController {
+func NewAllController(service *service.AllService, log *zap.Logger, redis *database.Cache, cfg *config.Config) *AllController {
 	return &AllController{
 		Auth: authcontroller.NewAuthController(service, log, redis),
-		User: usercontroller.NewUserController(service, log, redis),
+		User: usercontroller.NewUserController(service, log, redis, cfg),
 	}
 }
