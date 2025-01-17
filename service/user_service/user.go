@@ -13,6 +13,7 @@ type UserService interface {
 	RegisterUser(regist *model.Register) error
 	UpdateCustomer(token string, cust *model.CustomerData) error
 	UpdateProfile(token string, image string) error
+	UpdateRole(token string) error
 }
 
 type userService struct {

@@ -13,6 +13,7 @@ type UserRepo interface {
 	GetUser(login *model.Login) (*model.User, error)
 	UpdateCustomer(id int, customer *model.CustomerData) error
 	UpdateProfile(id int, image string) error
+	UpdateRole(id int) error
 }
 
 type userRepo struct {

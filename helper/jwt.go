@@ -6,6 +6,7 @@ import (
 	"encoding/pem"
 	"f-commerce/config"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -60,12 +61,12 @@ func (j *Jwt) CreateToken(email, id, role string) (string, error) {
 	return signedToken, nil
 }
 
-func (j *Jwt) ParsingPayload(tokenStr string) (any, error) {
+func (j *Jwt) ParsingPayload(tokenStr string) (int, error) {
 
 	parts := strings.Split(tokenStr, " ")
 	if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
 		j.Log.Error("Invalid Authorization header format")
-		return nil, fmt.Errorf("invalid authorization header format")
+		return 0, fmt.Errorf("invalid authorization header format")
 	}
 
 	tokenStr = parts[1]
@@ -73,50 +74,51 @@ func (j *Jwt) ParsingPayload(tokenStr string) (any, error) {
 	block, _ := pem.Decode([]byte(j.Cfg.Key.PublicKey))
 	if block == nil {
 		j.Log.Error("PEM decoding failed: block is nil")
-		return nil, fmt.Errorf("PEM decoding failed: block is nil")
+		return 0, fmt.Errorf("PEM decoding failed: block is nil")
 	}
 
 	if block.Type != "PUBLIC KEY" {
 		j.Log.Error("Unexpected PEM block type", zap.String("type", block.Type))
-		return nil, fmt.Errorf("unexpected PEM block type: %s", block.Type)
+		return 0, fmt.Errorf("unexpected PEM block type: %s", block.Type)
 	}
 
 	pubKey, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
 		j.Log.Error("Failed to parse public key", zap.Error(err))
-		return nil, fmt.Errorf("failed to parse public key: %v", err)
+		return 0, fmt.Errorf("failed to parse public key: %v", err)
 	}
 
 	rsaPubKey, ok := pubKey.(*rsa.PublicKey)
 	if !ok {
 		j.Log.Error("Public key is not RSA")
-		return nil, fmt.Errorf("not an RSA public key")
+		return 0, fmt.Errorf("not an RSA public key")
 	}
 
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 			j.Log.Error("Unexpected signing method", zap.Any("alg", token.Header["alg"]))
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			return 0, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		return rsaPubKey, nil
 	})
 
 	if err != nil {
 		j.Log.Error("Error parsing token", zap.Error(err))
-		return nil, fmt.Errorf("error parsing token: %v", err)
+		return 0, fmt.Errorf("error parsing token: %v", err)
 	}
 
-	// Validasi claims
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		id, exists := claims["ID"]
+		idStr, exists := claims["ID"]
 		if !exists {
 			j.Log.Error("ID not found in token claims")
-			return nil, fmt.Errorf("id not found in token")
+			return 0, fmt.Errorf("id not found in token")
 		}
+
+		id, _ := strconv.Atoi(idStr.(string))
+
 		return id, nil
 	}
 
-	// Jika token tidak valid
 	j.Log.Error("Invalid token")
-	return nil, fmt.Errorf("invalid token")
+	return 0, fmt.Errorf("invalid token")
 }

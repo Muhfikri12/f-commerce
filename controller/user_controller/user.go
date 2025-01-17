@@ -16,6 +16,8 @@ import (
 type UserController interface {
 	RegisterUser(c *gin.Context)
 	UpdateCustomer(c *gin.Context)
+	UpdateRole(c *gin.Context)
+	UpdateProfile(c *gin.Context)
 }
 
 type userController struct {

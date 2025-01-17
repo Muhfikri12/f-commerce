@@ -32,6 +32,8 @@ func (uc *userController) UpdateCustomer(c *gin.Context) {
 		return
 	}
 
+	helper.Responses(c, http.StatusOK, "successfully update customer", nil)
+
 }
 
 func (uc *userController) UpdateProfile(c *gin.Context) {
@@ -47,9 +49,26 @@ func (uc *userController) UpdateProfile(c *gin.Context) {
 
 	err = uc.service.User.UpdateProfile(token, filePath)
 	if err != nil {
-		uc.log.Error("Failed parsing payload JWT: " + err.Error())
-		helper.Responses(c, http.StatusBadRequest, "Failed parsing payload JWT: "+err.Error(), nil)
+		uc.log.Error("Failed to update profile: " + err.Error())
+		helper.Responses(c, http.StatusInternalServerError, "Failed to update profile: "+err.Error(), nil)
 		return
 	}
+
+	helper.Responses(c, http.StatusOK, "successfully update profile", nil)
+
+}
+
+func (uc *userController) UpdateRole(c *gin.Context) {
+
+	token := c.GetHeader("Authorization")
+
+	err := uc.service.User.UpdateRole(token)
+	if err != nil {
+		uc.log.Error("Failed to update role: " + err.Error())
+		helper.Responses(c, http.StatusInternalServerError, "Failed to update role: "+err.Error(), nil)
+		return
+	}
+
+	helper.Responses(c, http.StatusOK, "successfully update role", nil)
 
 }
