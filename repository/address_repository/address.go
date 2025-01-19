@@ -10,7 +10,7 @@ import (
 
 type AddressRepo interface {
 	CreateAddress(add *model.Address) error
-	FindAddressByid(id int) (*model.Address, error)
+	FindAddressByUserID(id int) (*model.Address, error)
 	UpdateAddress(id int, addr *model.Address) error
 }
 
@@ -31,7 +31,7 @@ func (ar *addressRepo) CreateAddress(add *model.Address) error {
 	return nil
 }
 
-func (ar *addressRepo) FindAddressByid(id int) (*model.Address, error) {
+func (ar *addressRepo) FindAddressByUserID(id int) (*model.Address, error) {
 
 	addr := model.Address{}
 

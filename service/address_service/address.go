@@ -33,7 +33,7 @@ func (as *addressService) CreateAddress(token string, add *model.Address) error 
 
 	add.UserID = id
 
-	_, err = as.repo.Address.FindAddressByid(id)
+	_, err = as.repo.Address.FindAddressByUserID(id)
 	if err != nil {
 		add.IsMain = true
 	}
@@ -52,7 +52,7 @@ func (as *addressService) FindAddressByid(token string) (*model.Address, error) 
 		return nil, err
 	}
 
-	addr, err := as.repo.Address.FindAddressByid(id)
+	addr, err := as.repo.Address.FindAddressByUserID(id)
 	if err != nil {
 		return nil, err
 	}
