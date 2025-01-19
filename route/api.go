@@ -21,7 +21,7 @@ func NewRoutes(ctx *infra.IntegrationContext) *gin.Engine {
 		user.PUT("/admin", ctx.Ctl.User.UpdateAdmin)
 		user.PUT("/profile", ctx.Ctl.User.UpdateProfile)
 		user.PUT("/role", ctx.Ctl.User.UpdateRole)
-		user.PUT("/update", ctx.Ctl.User.UpdateCustomer)
+		user.PUT("/user", ctx.Ctl.User.UpdateCustomer)
 	}
 
 	addr := r.Group("/address", ctx.Middleware.Middleware())
@@ -30,6 +30,11 @@ func NewRoutes(ctx *infra.IntegrationContext) *gin.Engine {
 		addr.GET("/", ctx.Ctl.Addr.FindAddressByUserID)
 		addr.PUT("/:id", ctx.Ctl.Addr.UpdateAddress)
 		addr.GET("/:id", ctx.Ctl.Addr.FindAddressByID)
+	}
+
+	cat := r.Group("/category", ctx.Middleware.Middleware())
+	{
+		cat.POST("/", ctx.Ctl.Cat.CreateCategory)
 	}
 
 	return r

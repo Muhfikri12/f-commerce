@@ -13,6 +13,7 @@ func Migration(db *gorm.DB) error {
 		&model.Customer{},
 		&model.Admin{},
 		&model.Address{},
+		&model.Category{},
 	); err != nil {
 		return fmt.Errorf("failed to migrate database: %v", err)
 	}
