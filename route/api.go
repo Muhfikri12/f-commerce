@@ -28,6 +28,7 @@ func NewRoutes(ctx *infra.IntegrationContext) *gin.Engine {
 	{
 		addr.POST("/", ctx.Ctl.Addr.CreateAddress)
 		addr.GET("/", ctx.Ctl.Addr.FindAddressByid)
+		addr.PUT("/:id", ctx.Ctl.Addr.UpdateAddress)
 	}
 
 	return r

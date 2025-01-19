@@ -5,6 +5,7 @@ import (
 	"f-commerce/model"
 	"f-commerce/service"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -13,6 +14,7 @@ import (
 type AddressController interface {
 	CreateAddress(c *gin.Context)
 	FindAddressByid(c *gin.Context)
+	UpdateAddress(c *gin.Context)
 }
 
 type addressService struct {
@@ -57,4 +59,25 @@ func (ac *addressService) FindAddressByid(c *gin.Context) {
 	}
 
 	helper.Responses(c, http.StatusOK, "Successfully Retrieved Address", address)
+}
+
+func (ac *addressService) UpdateAddress(c *gin.Context) {
+
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	addr := model.Address{}
+
+	if err := c.ShouldBindJSON(&addr); err != nil {
+		ac.log.Error("Invalid payload request: " + err.Error())
+		helper.Responses(c, http.StatusBadRequest, "Invalid payload request: "+err.Error(), nil)
+		return
+	}
+
+	if err := ac.service.Addr.UpdateAddress(id, &addr); err != nil {
+		ac.log.Error("Failed updated address: " + err.Error())
+		helper.Responses(c, http.StatusInternalServerError, "Failed updated address", nil)
+		return
+	}
+
+	helper.Responses(c, http.StatusOK, "Successfully Updated Address", nil)
 }

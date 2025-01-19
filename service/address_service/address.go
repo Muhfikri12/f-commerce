@@ -11,6 +11,7 @@ import (
 type AddressService interface {
 	CreateAddress(token string, add *model.Address) error
 	FindAddressByid(token string) (*model.Address, error)
+	UpdateAddress(id int, addr *model.Address) error
 }
 
 type addressService struct {
@@ -57,4 +58,13 @@ func (as *addressService) FindAddressByid(token string) (*model.Address, error) 
 	}
 
 	return addr, nil
+}
+
+func (as *addressService) UpdateAddress(id int, addr *model.Address) error {
+
+	if err := as.repo.Address.UpdateAddress(id, addr); err != nil {
+		return err
+	}
+
+	return nil
 }
