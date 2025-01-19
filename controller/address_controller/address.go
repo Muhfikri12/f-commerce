@@ -12,6 +12,7 @@ import (
 
 type AddressController interface {
 	CreateAddress(c *gin.Context)
+	FindAddressByid(c *gin.Context)
 }
 
 type addressService struct {
@@ -35,11 +36,25 @@ func (ac *addressService) CreateAddress(c *gin.Context) {
 	}
 
 	if err := ac.service.Addr.CreateAddress(token, &addr); err != nil {
-		ac.log.Error("Failed to create address: " + err.Error())
-		helper.Responses(c, http.StatusInternalServerError, "Failed to create address", nil)
+		ac.log.Error("Failed created address: " + err.Error())
+		helper.Responses(c, http.StatusInternalServerError, "Failed created address", nil)
 		return
 	}
 
 	helper.Responses(c, http.StatusCreated, "Successfully Created Address", nil)
 
+}
+
+func (ac *addressService) FindAddressByid(c *gin.Context) {
+
+	token := c.GetHeader("Authorization")
+
+	address, err := ac.service.Addr.FindAddressByid(token)
+	if err != nil {
+		ac.log.Error("Failed retrieved address: " + err.Error())
+		helper.Responses(c, http.StatusInternalServerError, "Failed retrieved address", nil)
+		return
+	}
+
+	helper.Responses(c, http.StatusOK, "Successfully Retrieved Address", address)
 }

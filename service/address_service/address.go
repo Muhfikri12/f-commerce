@@ -10,6 +10,7 @@ import (
 
 type AddressService interface {
 	CreateAddress(token string, add *model.Address) error
+	FindAddressByid(token string) (*model.Address, error)
 }
 
 type addressService struct {
@@ -41,4 +42,19 @@ func (as *addressService) CreateAddress(token string, add *model.Address) error 
 	}
 
 	return nil
+}
+
+func (as *addressService) FindAddressByid(token string) (*model.Address, error) {
+
+	id, err := as.jwt.ParsingPayload(token)
+	if err != nil {
+		return nil, err
+	}
+
+	addr, err := as.repo.Address.FindAddressByid(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return addr, nil
 }
