@@ -9,6 +9,7 @@ import (
 
 type CategoryService interface {
 	CreateCategory(cat *model.Category) error
+	ReadCategories() (*[]model.Category, error)
 }
 
 type categoryService struct {
@@ -22,4 +23,8 @@ func NewCategoryService(repo *repository.Repository, log *zap.Logger) CategorySe
 
 func (cs *categoryService) CreateCategory(cat *model.Category) error {
 	return cs.repo.Category.CreateCategory(cat)
+}
+
+func (cs *categoryService) ReadCategories() (*[]model.Category, error) {
+	return cs.repo.Category.ReadCategories()
 }

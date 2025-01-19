@@ -12,6 +12,7 @@ import (
 
 type CategoryController interface {
 	CreateCategory(c *gin.Context)
+	ReadCategories(c *gin.Context)
 }
 
 type categoryController struct {
@@ -41,4 +42,16 @@ func (cc *categoryController) CreateCategory(c *gin.Context) {
 
 	helper.Responses(c, http.StatusCreated, "Successfully Created category", nil)
 
+}
+
+func (cc *categoryController) ReadCategories(c *gin.Context) {
+
+	cat, err := cc.service.Cat.ReadCategories()
+	if err != nil {
+		cc.log.Error("Failed Show All Categories: " + err.Error())
+		helper.Responses(c, http.StatusInternalServerError, "Failed Show All Categories", nil)
+		return
+	}
+
+	helper.Responses(c, http.StatusOK, "Successfully Retrieved Categories", cat)
 }

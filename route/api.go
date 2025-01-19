@@ -35,6 +35,7 @@ func NewRoutes(ctx *infra.IntegrationContext) *gin.Engine {
 	cat := r.Group("/category", ctx.Middleware.Middleware())
 	{
 		cat.POST("/", ctx.Ctl.Cat.CreateCategory)
+		cat.GET("/", ctx.Ctl.Cat.ReadCategories)
 	}
 
 	return r
