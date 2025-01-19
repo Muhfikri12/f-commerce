@@ -11,6 +11,7 @@ import (
 type AddressRepo interface {
 	CreateAddress(add *model.Address) error
 	FindAddressByUserID(id int) (*model.Address, error)
+	FindAddressByID(id int) (*model.Address, error)
 	UpdateAddress(id int, addr *model.Address) error
 }
 
@@ -60,4 +61,20 @@ func (ar *addressRepo) UpdateAddress(id int, addr *model.Address) error {
 		return fmt.Errorf("address with id %d not found", id)
 	}
 	return nil
+}
+
+func (ar *addressRepo) FindAddressByID(id int) (*model.Address, error) {
+
+	addr := model.Address{}
+	result := ar.db.Where("id = ?", id).First(&addr)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return nil, fmt.Errorf("address with id %d not found", id)
+	}
+
+	return &addr, nil
 }
