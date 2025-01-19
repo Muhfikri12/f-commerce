@@ -46,7 +46,9 @@ func (cc *categoryController) CreateCategory(c *gin.Context) {
 
 func (cc *categoryController) ReadCategories(c *gin.Context) {
 
-	cat, err := cc.service.Cat.ReadCategories()
+	serach := c.Query("name")
+
+	cat, err := cc.service.Cat.ReadCategories(serach)
 	if err != nil {
 		cc.log.Error("Failed Show All Categories: " + err.Error())
 		helper.Responses(c, http.StatusInternalServerError, "Failed Show All Categories", nil)

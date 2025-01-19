@@ -10,7 +10,7 @@ import (
 
 type CategoryRepo interface {
 	CreateCategory(cat *model.Category) error
-	ReadCategories() (*[]model.Category, error)
+	ReadCategories(search string) (*[]model.Category, error)
 }
 
 type categoryRepo struct {
@@ -31,11 +31,11 @@ func (cr *categoryRepo) CreateCategory(cat *model.Category) error {
 	return nil
 }
 
-func (cr *categoryRepo) ReadCategories() (*[]model.Category, error) {
+func (cr *categoryRepo) ReadCategories(search string) (*[]model.Category, error) {
 
 	cat := []model.Category{}
 
-	result := cr.db.Find(&cat)
+	result := cr.db.Where("name LIKE ?", "%"+search+"%").Find(&cat)
 
 	if result.Error != nil {
 		return nil, result.Error
