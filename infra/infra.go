@@ -5,6 +5,7 @@ import (
 	"f-commerce/controller"
 	"f-commerce/database"
 	"f-commerce/helper"
+	"f-commerce/middleware"
 	"f-commerce/repository"
 	"f-commerce/service"
 
@@ -13,12 +14,12 @@ import (
 )
 
 type IntegrationContext struct {
-	Cfg   *config.Config
-	DB    *gorm.DB
-	Log   *zap.Logger
-	Ctl   *controller.AllController
-	Cache *database.Cache
-	// Middleware middleware.AllHandler
+	Cfg        *config.Config
+	DB         *gorm.DB
+	Log        *zap.Logger
+	Ctl        *controller.AllController
+	Cache      *database.Cache
+	Middleware middleware.Middleware
 }
 
 func NewIntegrateContext() (*IntegrationContext, error) {
@@ -50,16 +51,16 @@ func NewIntegrateContext() (*IntegrationContext, error) {
 
 	service := service.NewAllService(repo, log, jwt)
 
-	// middleware := middleware.NewMiddleware(service, log)
+	middleware := middleware.NewMiddleware(log, jwt)
 
 	handler := controller.NewAllController(service, log, rdb, config)
 
 	return &IntegrationContext{
-		Cfg:   config,
-		DB:    db,
-		Log:   log,
-		Ctl:   handler,
-		Cache: rdb,
-		// Middleware: *middleware,
+		Cfg:        config,
+		DB:         db,
+		Log:        log,
+		Ctl:        handler,
+		Cache:      rdb,
+		Middleware: *middleware,
 	}, nil
 }

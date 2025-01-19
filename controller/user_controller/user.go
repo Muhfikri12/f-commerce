@@ -19,6 +19,7 @@ type UserController interface {
 	UpdateRole(c *gin.Context)
 	UpdateProfile(c *gin.Context)
 	UpdateAdmin(c *gin.Context)
+	UpdateUser(c *gin.Context)
 }
 
 type userController struct {
@@ -74,9 +75,39 @@ func (uc *userController) RegisterUser(c *gin.Context) {
 			helper.Responses(c, http.StatusBadRequest, "failed set otp on redis : "+err.Error(), nil)
 			return
 		}
+
+		helper.Responses(c, http.StatusCreated, "Registration successfully, Please check email for verification otp", nil)
+
+	} else {
+		helper.Responses(c, http.StatusCreated, "Registration successfully", nil)
 	}
 
 	uc.log.Info("Registration successfully")
+}
 
-	helper.Responses(c, http.StatusCreated, "Registration successfully, Please check email for verification otp", nil)
+func (uc *userController) UpdateUser(c *gin.Context) {
+
+	token := c.GetHeader("Authorization")
+
+	user := model.User{}
+
+	if err := c.ShouldBindJSON(&user); err != nil {
+		uc.log.Error("Invalid payload request: " + err.Error())
+		helper.Responses(c, http.StatusBadRequest, "Invalid payload request: "+err.Error(), nil)
+		return
+	}
+
+	if valid, msg := helper.ValidatePassword(user.Password); !valid {
+		uc.log.Error("Validation error: " + msg.Error())
+		helper.Responses(c, http.StatusBadRequest, msg.Error(), nil)
+		return
+	}
+
+	if err := uc.service.User.UpdateUser(token, &user); err != nil {
+		uc.log.Error("Error: " + err.Error())
+		helper.Responses(c, http.StatusInternalServerError, "Error: "+err.Error(), nil)
+		return
+	}
+
+	helper.Responses(c, http.StatusOK, "Successfully Updated User", nil)
 }

@@ -101,7 +101,6 @@ func (j *Jwt) ParsingPayload(tokenStr string) (int, error) {
 		}
 		return rsaPubKey, nil
 	})
-
 	if err != nil {
 		j.Log.Error("Error parsing token", zap.Error(err))
 		return 0, fmt.Errorf("error parsing token: %v", err)

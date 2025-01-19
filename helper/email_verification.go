@@ -32,8 +32,7 @@ func SendOTPEmail(to []mailersend.Recipient, otp string) error {
 
 	ms := mailersend.NewMailersend(cfg.SmtpEmail.ApiKey)
 
-	ctx := context.Background()
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	tmpl, err := template.ParseFiles("view/otp_template.html")

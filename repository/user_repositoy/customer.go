@@ -20,7 +20,7 @@ func (c *userRepo) UpdateCustomer(id int, customer *model.Customer) error {
 		}
 
 		if result.RowsAffected == 0 {
-			return fmt.Errorf("no user found with ID %d", id)
+			return fmt.Errorf("user with id %d not found", id)
 		}
 
 		return nil
@@ -47,7 +47,7 @@ func (c *userRepo) UpdateProfile(id int, image string) error {
 	}
 
 	if result.RowsAffected == 0 {
-		return fmt.Errorf("id %d does not exist", id)
+		return fmt.Errorf("user with id %d not found", id)
 	}
 
 	return nil
@@ -66,7 +66,7 @@ func (uc *userRepo) UpdateRole(id int) error {
 	}
 
 	if result.RowsAffected == 0 {
-		return fmt.Errorf("user %d does not exist", id)
+		return fmt.Errorf("user with id %d not found", id)
 	}
 
 	return nil

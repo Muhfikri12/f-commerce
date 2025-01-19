@@ -7,10 +7,10 @@ import (
 )
 
 type Customer struct {
-	ID          int       `json:"-" gorm:"primaryKey"`
-	UserID      int       `json:"user_id"`
-	Fullname    string    `json:"fullname" binding:"required,min=5"`
-	DateOfBirth time.Time `json:"date_of_birth" binding:"required"`
+	ID          int    `json:"-" gorm:"primaryKey"`
+	UserID      int    `json:"user_id"`
+	Fullname    string `json:"fullname" binding:"required,min=5"`
+	DateOfBirth string `json:"date_of_birth" binding:"required"`
 	Gender      string
 	Phone       string
 	Image       string
@@ -39,4 +39,5 @@ type Register struct {
 type CustomerData struct {
 	User     User
 	Customer Customer
+	Admin    Admin
 }

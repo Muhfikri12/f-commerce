@@ -9,6 +9,7 @@ import (
 type Login struct {
 	Input    string `json:"input" binding:"required"`
 	Password string `json:"password" binding:"required"`
+	ID       int
 }
 
 type VerificationEmail struct {

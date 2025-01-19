@@ -23,7 +23,7 @@ func (ur *userRepo) UpdateAdmin(id int, admin *model.Admin) error {
 		}
 
 		if result.RowsAffected == 0 {
-			return fmt.Errorf("error id %d does not exist", id)
+			return fmt.Errorf("user with id %d not found", id)
 		}
 
 		return nil
