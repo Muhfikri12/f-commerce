@@ -6,6 +6,7 @@ import (
 	"encoding/pem"
 	"f-commerce/config"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -130,12 +131,13 @@ func (j *Jwt) ParsingClaim(tokenStr, claimKey string) (interface{}, error) {
 
 func (j *Jwt) ParsingID(tokenStr string) (int, error) {
 
-	id, err := j.ParsingClaim(tokenStr, "ID")
+	idStr, err := j.ParsingClaim(tokenStr, "ID")
 	if err != nil {
 		return 0, err
 	}
 
-	return id.(int), err
+	id, _ := strconv.Atoi(idStr.(string))
+	return id, err
 }
 
 func (j *Jwt) ParsingRole(tokenStr string) (string, error) {
