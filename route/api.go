@@ -33,7 +33,7 @@ func NewRoutes(ctx *infra.IntegrationContext) *gin.Engine {
 		addr.DELETE("/:id", ctx.Ctl.Addr.DeleteAddress)
 	}
 
-	cat := r.Group("/category", ctx.Middleware.Middleware())
+	cat := r.Group("/category", ctx.Middleware.Middleware(), ctx.Middleware.AccessSeller())
 	{
 		cat.POST("/", ctx.Ctl.Cat.CreateCategory)
 		cat.GET("/", ctx.Ctl.Cat.ReadCategories)
