@@ -13,6 +13,7 @@ type AddressService interface {
 	FindAddressByUserID(token string) (*model.Address, error)
 	UpdateAddress(id int, addr *model.Address) error
 	FindAddressByID(id int) (*model.Address, error)
+	DeleteAddress(id int) error
 }
 
 type addressService struct {
@@ -62,14 +63,13 @@ func (as *addressService) FindAddressByUserID(token string) (*model.Address, err
 }
 
 func (as *addressService) UpdateAddress(id int, addr *model.Address) error {
-
-	if err := as.repo.Address.UpdateAddress(id, addr); err != nil {
-		return err
-	}
-
-	return nil
+	return as.repo.Address.UpdateAddress(id, addr)
 }
 
 func (as *addressService) FindAddressByID(id int) (*model.Address, error) {
 	return as.repo.Address.FindAddressByID(id)
+}
+
+func (as *addressService) DeleteAddress(id int) error {
+	return as.repo.Address.DeleteAddress(id)
 }

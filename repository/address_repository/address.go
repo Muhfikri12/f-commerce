@@ -13,6 +13,7 @@ type AddressRepo interface {
 	FindAddressByUserID(id int) (*model.Address, error)
 	FindAddressByID(id int) (*model.Address, error)
 	UpdateAddress(id int, addr *model.Address) error
+	DeleteAddress(id int) error
 }
 
 type addressRepo struct {
@@ -77,4 +78,19 @@ func (ar *addressRepo) FindAddressByID(id int) (*model.Address, error) {
 	}
 
 	return &addr, nil
+}
+
+func (ar *addressRepo) DeleteAddress(id int) error {
+
+	result := ar.db.Delete(&model.Address{}, id)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("address with id %d not found", id)
+	}
+
+	return nil
 }

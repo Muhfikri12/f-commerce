@@ -2,8 +2,6 @@ package model
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type Address struct {
@@ -15,7 +13,6 @@ type Address struct {
 	IsMain    bool   `gorm:"default:false"`
 	Latitude  string
 	Longitude string
-	CreatedAt time.Time       `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt time.Time       `json:"updated_at" gorm:"autoUpdateTime"`
-	DeletedAt *gorm.DeletedAt `json:"-" gorm:"index"`
+	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
+	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`
 }

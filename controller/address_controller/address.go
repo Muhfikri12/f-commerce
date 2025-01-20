@@ -16,6 +16,7 @@ type AddressController interface {
 	FindAddressByUserID(c *gin.Context)
 	UpdateAddress(c *gin.Context)
 	FindAddressByID(c *gin.Context)
+	DeleteAddress(c *gin.Context)
 }
 
 type addressService struct {
@@ -95,4 +96,17 @@ func (ac *addressService) FindAddressByID(c *gin.Context) {
 	}
 
 	helper.Responses(c, http.StatusOK, "Successfully Retrieved Address", address)
+}
+
+func (ac *addressService) DeleteAddress(c *gin.Context) {
+
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	if err := ac.service.Addr.DeleteAddress(id); err != nil {
+		ac.log.Error("Failed Deleted address: " + err.Error())
+		helper.Responses(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+
+	helper.Responses(c, http.StatusOK, "Successfully Deleted Address", nil)
 }
