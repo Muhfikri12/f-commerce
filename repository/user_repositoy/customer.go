@@ -73,11 +73,11 @@ func (uc *userRepo) UpdateRole(id int) error {
 	return nil
 }
 
-func (uc *userRepo) NonactiveAccount(id int) error {
+func (uc *userRepo) UpdateStatus(id int, status string) error {
 
 	result := uc.db.Table("users").Where("id = ?", id).
 		Updates(map[string]interface{}{
-			"status":     "nonactive",
+			"status":     status,
 			"updated_at": time.Now(),
 		})
 

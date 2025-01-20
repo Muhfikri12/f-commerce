@@ -44,6 +44,11 @@ func (as *authService) Login(login *model.Login) (*model.User, string, error) {
 		return nil, "", errors.New("invalid password")
 	}
 
+	if user.Status == "nonactive" {
+		err := as.repo.User.UpdateStatus(user.Id, "active")
+		return nil, "", err
+	}
+
 	id := strconv.Itoa(user.Id)
 
 	token, err := as.jwt.CreateToken(user.Email, id, user.Role)

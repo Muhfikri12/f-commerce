@@ -17,7 +17,7 @@ type UserRepo interface {
 	UpdateProfile(id int, image string) error
 	UpdateRole(id int) error
 	UpdateAdmin(id int, admin *model.Admin) error
-	NonactiveAccount(id int) error
+	UpdateStatus(id int, status string) error
 }
 
 type userRepo struct {

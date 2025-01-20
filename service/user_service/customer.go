@@ -45,5 +45,6 @@ func (us *userService) NonactiveAccount(token string) error {
 		return fmt.Errorf("failed parsing id from JWT: " + err.Error())
 	}
 
-	return us.Repo.User.NonactiveAccount(id)
+	status := "nonactive"
+	return us.Repo.User.UpdateStatus(id, status)
 }
