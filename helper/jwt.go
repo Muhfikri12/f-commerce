@@ -6,7 +6,6 @@ import (
 	"encoding/pem"
 	"f-commerce/config"
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
@@ -106,11 +105,10 @@ func (j *Jwt) ParsingPayload(tokenStr string) (*jwt.Token, error) {
 		return nil, fmt.Errorf("error parsing token: %v", err)
 	}
 
-	// j.Log.Error("Invalid token")
 	return token, nil
 }
 
-func (j *Jwt) ParsingID(tokenStr string) (int, error) {
+func (j *Jwt) ParsingClaim(tokenStr, claimKey string) (interface{}, error) {
 
 	token, err := j.ParsingPayload(tokenStr)
 	if err != nil {
@@ -118,16 +116,34 @@ func (j *Jwt) ParsingID(tokenStr string) (int, error) {
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		idStr, exists := claims["ID"]
+		claims, exists := claims[claimKey]
 		if !exists {
-			j.Log.Error("ID not found in token claims")
-			return 0, fmt.Errorf("id not found in token")
+			j.Log.Error("claimKey not found in token claims")
+			return 0, fmt.Errorf("%s not found in token", claimKey)
 		}
 
-		id, _ := strconv.Atoi(idStr.(string))
-
-		return id, nil
+		return claims, nil
 	}
 
-	return 0, err
+	return nil, fmt.Errorf("failed to claim token")
+}
+
+func (j *Jwt) ParsingID(tokenStr string) (int, error) {
+
+	id, err := j.ParsingClaim(tokenStr, "ID")
+	if err != nil {
+		return 0, err
+	}
+
+	return id.(int), err
+}
+
+func (j *Jwt) ParsingRole(tokenStr string) (string, error) {
+
+	role, err := j.ParsingClaim(tokenStr, "Role")
+	if err != nil {
+		return "", err
+	}
+
+	return role.(string), err
 }
