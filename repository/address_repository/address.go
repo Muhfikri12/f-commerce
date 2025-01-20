@@ -39,12 +39,12 @@ func (ar *addressRepo) FindAddressByUserID(id int) (*model.Address, error) {
 
 	result := ar.db.Where("user_id = ?", id).Find(&addr)
 
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
 	if result.RowsAffected == 0 {
 		return nil, fmt.Errorf("user with id %d not found", id)
+	}
+
+	if result.Error != nil {
+		return nil, result.Error
 	}
 
 	return &addr, nil
@@ -54,13 +54,14 @@ func (ar *addressRepo) UpdateAddress(id int, addr *model.Address) error {
 
 	result := ar.db.Where("id = ?", id).Updates(&addr)
 
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("address with id %d not found", id)
+	}
+
 	if result.Error != nil {
 		return result.Error
 	}
 
-	if result.RowsAffected == 0 {
-		return fmt.Errorf("address with id %d not found", id)
-	}
 	return nil
 }
 
@@ -69,12 +70,12 @@ func (ar *addressRepo) FindAddressByID(id int) (*model.Address, error) {
 	addr := model.Address{}
 	result := ar.db.Where("id = ?", id).First(&addr)
 
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
 	if result.RowsAffected == 0 {
 		return nil, fmt.Errorf("address with id %d not found", id)
+	}
+
+	if result.Error != nil {
+		return nil, result.Error
 	}
 
 	return &addr, nil
@@ -84,12 +85,12 @@ func (ar *addressRepo) DeleteAddress(id int) error {
 
 	result := ar.db.Delete(&model.Address{}, id)
 
-	if result.Error != nil {
-		return result.Error
-	}
-
 	if result.RowsAffected == 0 {
 		return fmt.Errorf("address with id %d not found", id)
+	}
+
+	if result.Error != nil {
+		return result.Error
 	}
 
 	return nil

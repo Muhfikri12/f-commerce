@@ -15,12 +15,13 @@ func (c *userRepo) UpdateCustomer(id int, customer *model.Customer) error {
 		customer.UpdatedAt = time.Now()
 
 		result := tx.Table("customers").Where("user_id = ?", id).Updates(&customer)
-		if result.Error != nil {
-			return result.Error
-		}
 
 		if result.RowsAffected == 0 {
 			return fmt.Errorf("user with id %d not found", id)
+		}
+
+		if result.Error != nil {
+			return result.Error
 		}
 
 		return nil
@@ -42,12 +43,12 @@ func (c *userRepo) UpdateProfile(id int, image string) error {
 			"updated_at": time.Now(),
 		})
 
-	if result.Error != nil {
-		return result.Error
-	}
-
 	if result.RowsAffected == 0 {
 		return fmt.Errorf("user with id %d not found", id)
+	}
+
+	if result.Error != nil {
+		return result.Error
 	}
 
 	return nil
@@ -61,12 +62,12 @@ func (uc *userRepo) UpdateRole(id int) error {
 			"updated_at": time.Now(),
 		})
 
-	if result.Error != nil {
-		return result.Error
-	}
-
 	if result.RowsAffected == 0 {
 		return fmt.Errorf("user with id %d not found", id)
+	}
+
+	if result.Error != nil {
+		return result.Error
 	}
 
 	return nil

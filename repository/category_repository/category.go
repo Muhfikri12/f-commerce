@@ -37,12 +37,12 @@ func (cr *categoryRepo) ReadCategories(search string) (*[]model.Category, error)
 
 	result := cr.db.Where("name LIKE ?", "%"+search+"%").Find(&cat)
 
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
 	if result.RowsAffected == 0 {
 		return nil, fmt.Errorf("category not found")
+	}
+
+	if result.Error != nil {
+		return nil, result.Error
 	}
 
 	return &cat, nil

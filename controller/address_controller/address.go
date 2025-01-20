@@ -91,7 +91,7 @@ func (ac *addressService) FindAddressByID(c *gin.Context) {
 	address, err := ac.service.Addr.FindAddressByID(id)
 	if err != nil {
 		ac.log.Error("Failed retrieved address: " + err.Error())
-		helper.Responses(c, http.StatusInternalServerError, err.Error(), nil)
+		helper.Responses(c, http.StatusNotFound, err.Error(), nil)
 		return
 	}
 
@@ -104,7 +104,7 @@ func (ac *addressService) DeleteAddress(c *gin.Context) {
 
 	if err := ac.service.Addr.DeleteAddress(id); err != nil {
 		ac.log.Error("Failed Deleted address: " + err.Error())
-		helper.Responses(c, http.StatusInternalServerError, err.Error(), nil)
+		helper.Responses(c, http.StatusNotFound, err.Error(), nil)
 		return
 	}
 

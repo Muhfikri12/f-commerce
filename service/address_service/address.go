@@ -28,7 +28,7 @@ func NewAddressService(repo *repository.Repository, log *zap.Logger, jwt *helper
 
 func (as *addressService) CreateAddress(token string, add *model.Address) error {
 
-	id, err := as.jwt.ParsingPayload(token)
+	id, err := as.jwt.ParsingID(token)
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func (as *addressService) CreateAddress(token string, add *model.Address) error 
 
 func (as *addressService) FindAddressByUserID(token string) (*model.Address, error) {
 
-	id, err := as.jwt.ParsingPayload(token)
+	id, err := as.jwt.ParsingID(token)
 	if err != nil {
 		return nil, err
 	}

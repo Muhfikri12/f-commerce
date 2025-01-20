@@ -77,7 +77,7 @@ func (us *userService) UpdateUser(token string, user *model.User) error {
 
 	user.Password = string(password)
 
-	id, err := us.jwt.ParsingPayload(token)
+	id, err := us.jwt.ParsingID(token)
 	if err != nil {
 		return err
 	}

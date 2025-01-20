@@ -18,12 +18,12 @@ func (ur *userRepo) UpdateAdmin(id int, admin *model.Admin) error {
 			Where("user_id = ?", id).
 			Updates(&admin)
 
-		if result.Error != nil {
-			return result.Error
-		}
-
 		if result.RowsAffected == 0 {
 			return fmt.Errorf("user with id %d not found", id)
+		}
+
+		if result.Error != nil {
+			return result.Error
 		}
 
 		return nil

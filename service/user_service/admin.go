@@ -7,7 +7,7 @@ import (
 
 func (us *userService) UpdateAdmin(token string, admin *model.Admin) error {
 
-	id, err := us.jwt.ParsingPayload(token)
+	id, err := us.jwt.ParsingID(token)
 	if err != nil {
 		return fmt.Errorf("failed parsing id from JWT: " + err.Error())
 	}

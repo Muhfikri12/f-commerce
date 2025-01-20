@@ -61,12 +61,12 @@ func (j *Jwt) CreateToken(email, id, role string) (string, error) {
 	return signedToken, nil
 }
 
-func (j *Jwt) ParsingPayload(tokenStr string) (int, error) {
+func (j *Jwt) ParsingPayload(tokenStr string) (*jwt.Token, error) {
 
 	parts := strings.Split(tokenStr, " ")
 	if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
 		j.Log.Error("Invalid Authorization header format")
-		return 0, fmt.Errorf("invalid authorization header format")
+		return nil, fmt.Errorf("invalid authorization header format")
 	}
 
 	tokenStr = parts[1]
@@ -74,36 +74,47 @@ func (j *Jwt) ParsingPayload(tokenStr string) (int, error) {
 	block, _ := pem.Decode([]byte(j.Cfg.Key.PublicKey))
 	if block == nil {
 		j.Log.Error("PEM decoding failed: block is nil")
-		return 0, fmt.Errorf("PEM decoding failed: block is nil")
+		return nil, fmt.Errorf("PEM decoding failed: block is nil")
 	}
 
 	if block.Type != "PUBLIC KEY" {
 		j.Log.Error("Unexpected PEM block type", zap.String("type", block.Type))
-		return 0, fmt.Errorf("unexpected PEM block type: %s", block.Type)
+		return nil, fmt.Errorf("unexpected PEM block type: %s", block.Type)
 	}
 
 	pubKey, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
 		j.Log.Error("Failed to parse public key", zap.Error(err))
-		return 0, fmt.Errorf("failed to parse public key: %v", err)
+		return nil, fmt.Errorf("failed to parse public key: %v", err)
 	}
 
 	rsaPubKey, ok := pubKey.(*rsa.PublicKey)
 	if !ok {
 		j.Log.Error("Public key is not RSA")
-		return 0, fmt.Errorf("not an RSA public key")
+		return nil, fmt.Errorf("not an RSA public key")
 	}
 
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 			j.Log.Error("Unexpected signing method", zap.Any("alg", token.Header["alg"]))
-			return 0, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		return rsaPubKey, nil
 	})
 	if err != nil {
 		j.Log.Error("Error parsing token", zap.Error(err))
-		return 0, fmt.Errorf("error parsing token: %v", err)
+		return nil, fmt.Errorf("error parsing token: %v", err)
+	}
+
+	// j.Log.Error("Invalid token")
+	return token, nil
+}
+
+func (j *Jwt) ParsingID(tokenStr string) (int, error) {
+
+	token, err := j.ParsingPayload(tokenStr)
+	if err != nil {
+		return 0, err
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
@@ -118,6 +129,5 @@ func (j *Jwt) ParsingPayload(tokenStr string) (int, error) {
 		return id, nil
 	}
 
-	j.Log.Error("Invalid token")
-	return 0, fmt.Errorf("invalid token")
+	return 0, err
 }

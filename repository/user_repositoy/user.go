@@ -73,12 +73,12 @@ func (c *userRepo) UpdateUser(id int, user *model.User) error {
 
 	result := c.db.Table("users").Where("id = ?", id).Updates(&user)
 
-	if result.Error != nil {
-		return result.Error
-	}
-
 	if result.RowsAffected == 0 {
 		return fmt.Errorf("user with id %d not found", id)
+	}
+
+	if result.Error != nil {
+		return result.Error
 	}
 
 	return nil

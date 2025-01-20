@@ -7,7 +7,7 @@ import (
 
 func (us *userService) UpdateCustomer(token string, cust *model.Customer) error {
 
-	id, err := us.jwt.ParsingPayload(token)
+	id, err := us.jwt.ParsingID(token)
 	if err != nil {
 		return fmt.Errorf("failed parsing id from JWT: " + err.Error())
 	}
@@ -21,7 +21,7 @@ func (us *userService) UpdateCustomer(token string, cust *model.Customer) error 
 
 func (us *userService) UpdateProfile(token string, image string) error {
 
-	id, err := us.jwt.ParsingPayload(token)
+	id, err := us.jwt.ParsingID(token)
 	if err != nil {
 		return fmt.Errorf("failed parsing id from JWT: " + err.Error())
 	}
@@ -35,7 +35,7 @@ func (us *userService) UpdateProfile(token string, image string) error {
 
 func (us *userService) UpdateRole(token string) error {
 
-	id, err := us.jwt.ParsingPayload(token)
+	id, err := us.jwt.ParsingID(token)
 	if err != nil {
 		return fmt.Errorf("failed parsing id from JWT: " + err.Error())
 	}
