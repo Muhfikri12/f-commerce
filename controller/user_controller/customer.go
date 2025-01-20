@@ -66,3 +66,18 @@ func (uc *userController) UpdateRole(c *gin.Context) {
 	helper.Responses(c, http.StatusOK, "successfully update role", nil)
 
 }
+
+func (uc *userController) NonactiveAccount(c *gin.Context) {
+
+	token := c.GetHeader("Authorization")
+
+	err := uc.service.User.NonactiveAccount(token)
+	if err != nil {
+		uc.log.Error("Failed to nonactive role: " + err.Error())
+		helper.Responses(c, http.StatusInternalServerError, "Failed to nonactive role: "+err.Error(), nil)
+		return
+	}
+
+	helper.Responses(c, http.StatusOK, "successfully nonactive role", nil)
+
+}

@@ -22,6 +22,7 @@ func NewRoutes(ctx *infra.IntegrationContext) *gin.Engine {
 		user.PUT("/profile", ctx.Ctl.User.UpdateProfile)
 		user.PUT("/role", ctx.Ctl.User.UpdateRole)
 		user.PUT("/user", ctx.Ctl.User.UpdateCustomer)
+		user.PUT("/nonactive", ctx.Ctl.User.NonactiveAccount)
 	}
 
 	addr := r.Group("/address", ctx.Middleware.Middleware())

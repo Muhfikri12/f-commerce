@@ -20,6 +20,7 @@ type UserController interface {
 	UpdateProfile(c *gin.Context)
 	UpdateAdmin(c *gin.Context)
 	UpdateUser(c *gin.Context)
+	NonactiveAccount(c *gin.Context)
 }
 
 type userController struct {

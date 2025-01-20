@@ -26,11 +26,7 @@ func (us *userService) UpdateProfile(token string, image string) error {
 		return fmt.Errorf("failed parsing id from JWT: " + err.Error())
 	}
 
-	if err := us.Repo.User.UpdateProfile(id, image); err != nil {
-		return err
-	}
-
-	return nil
+	return us.Repo.User.UpdateProfile(id, image)
 }
 
 func (us *userService) UpdateRole(token string) error {
@@ -40,9 +36,14 @@ func (us *userService) UpdateRole(token string) error {
 		return fmt.Errorf("failed parsing id from JWT: " + err.Error())
 	}
 
-	if err := us.Repo.User.UpdateRole(id); err != nil {
-		return err
+	return us.Repo.User.UpdateRole(id)
+}
+
+func (us *userService) NonactiveAccount(token string) error {
+	id, err := us.jwt.ParsingID(token)
+	if err != nil {
+		return fmt.Errorf("failed parsing id from JWT: " + err.Error())
 	}
 
-	return nil
+	return us.Repo.User.NonactiveAccount(id)
 }

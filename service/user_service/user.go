@@ -17,6 +17,7 @@ type UserService interface {
 	UpdateRole(token string) error
 	UpdateAdmin(token string, admin *model.Admin) error
 	UpdateUser(token string, user *model.User) error
+	NonactiveAccount(token string) error
 }
 
 type userService struct {

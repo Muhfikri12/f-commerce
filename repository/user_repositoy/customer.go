@@ -72,3 +72,21 @@ func (uc *userRepo) UpdateRole(id int) error {
 
 	return nil
 }
+
+func (uc *userRepo) NonactiveAccount(id int) error {
+
+	result := uc.db.Table("users").Where("id = ?", id).
+		Updates(map[string]interface{}{
+			"status":     "nonactive",
+			"updated_at": time.Now(),
+		})
+
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("user with id %d not found", id)
+	}
+
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
